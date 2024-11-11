@@ -10,6 +10,7 @@ import SwiftUI
 struct ContentView: View {
     let choices = ["✊", "✋", "✌️"]
     let winState = ["✊✋", "✋✌️", "✌️✊"]
+    let loseState = ["✊✌️", "✋✊", "✌️✋"]
     
     @State private var appChoice = ["✊", "✋", "✌️"].randomElement() ?? ""
     @State private var winCondition = Bool.random()
@@ -34,7 +35,7 @@ struct ContentView: View {
                 HStack {
                     ForEach(choices, id: \.self) { choice in
                         Button{
-                            playerScores(appChoice: appChoice, playerChoice: choice)
+                            playerSelection(appChoice: appChoice, playerChoice: choice)
                         }label: {
                             Text(choice)
                                 .font(.system(size: 100))
@@ -54,19 +55,24 @@ struct ContentView: View {
         }
     }
     
-    func playerScores(appChoice: String, playerChoice: String) {
+    func playerSelection(appChoice: String, playerChoice: String) {
         let playerWins = winState.contains(appChoice + playerChoice)
+        let playerLoses = loseState.contains(appChoice + playerChoice)
         
-        if playerWins == winCondition {
+        if (winCondition && playerWins) || (!winCondition && playerLoses) {
             score += 1
-            alertTitle = "Correct"
-            alertMessage = "Your current score is \(score)"
+            setAlert(title: "Correct")
         } else {
-            alertTitle = "Wrong"
-            alertMessage = "Your current score is \(score)"
+            setAlert(title: "Wrong")
         }
+        
         questionsAsked += 1
         showingScore = true
+    }
+    
+    func setAlert(title: String) {
+        alertTitle = title
+        alertMessage = "Your current score is \(score)"
     }
     
     func newQuestion() {
