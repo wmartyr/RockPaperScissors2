@@ -27,14 +27,20 @@ struct ContentView: View {
             VStack {
                 Spacer()
                 Text("App Selects")
+                    .font(.title)
+                    .fontWeight(.semibold)
                 Text(appChoice)
                     .font(.system(size: 200))
                 Text("To get a point, you must")
+                    .font(.title3)
+                    .fontWeight(.semibold)
                 Text("\(winCondition ? "Win" : "Lose")")
                     .font(.largeTitle)
                     .fontWeight(.bold)
                 Spacer()
                 Text("Make a selection")
+                    .font(.title3)
+                    .fontWeight(.semibold)
                 HStack {
                     ForEach(choices, id: \.self) { choice in
                         Button{
@@ -59,7 +65,7 @@ struct ContentView: View {
         .alert(alertTitle, isPresented: $showingFinalScore) {
             Button("Play Again", action: newGame)
         }message: {
-            Text("Your final score is \(score) out of 5")
+            Text("Your final score is \(score) out of 10")
         }
     }
     
@@ -76,7 +82,7 @@ struct ContentView: View {
         
         questionsAsked += 1
         
-        if questionsAsked < 5 {
+        if questionsAsked < 10 {
             showingScore = true
         } else {
             alertTitle = "Game Over"
