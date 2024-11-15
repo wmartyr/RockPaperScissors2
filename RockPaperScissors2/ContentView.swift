@@ -29,7 +29,10 @@ struct ContentView: View {
                 Text("App Selects")
                 Text(appChoice)
                     .font(.system(size: 200))
-                Text("To get a point, you must \(winCondition ? "Win" : "Lose")")
+                Text("To get a point, you must")
+                Text("\(winCondition ? "Win" : "Lose")")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
                 Spacer()
                 Text("Make a selection")
                 HStack {
@@ -51,7 +54,12 @@ struct ContentView: View {
         .alert(alertTitle, isPresented: $showingScore) {
             Button("Continue", action: newQuestion)
         }message: {
-            Text(alertMessage)
+            Text("Your current score is \(score)")
+        }
+        .alert(alertTitle, isPresented: $showingFinalScore) {
+            Button("Play Again", action: newGame)
+        }message: {
+            Text("Your final score is \(score) out of 5")
         }
     }
     
@@ -61,24 +69,34 @@ struct ContentView: View {
         
         if (winCondition && playerWins) || (!winCondition && playerLoses) {
             score += 1
-            setAlert(title: "Correct")
+            alertTitle = "Correct"
         } else {
-            setAlert(title: "Wrong")
+            alertTitle = "Wrong"
         }
         
         questionsAsked += 1
-        showingScore = true
-    }
-    
-    func setAlert(title: String) {
-        alertTitle = title
-        alertMessage = "Your current score is \(score)"
+        
+        if questionsAsked < 5 {
+            showingScore = true
+        } else {
+            alertTitle = "Game Over"
+            showingFinalScore = true
+        }
     }
     
     func newQuestion() {
         appChoice = ["✊", "✋", "✌️"].randomElement() ?? ""
         winCondition = Bool.random()
     }
+    
+    func newGame() {
+        newQuestion()
+        score = 0
+        questionsAsked = 0
+    }
+    
+// TODO Check why score is 0 on final message.
+    
 }
 
 #Preview {
